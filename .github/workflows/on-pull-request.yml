@@ -44,7 +44,7 @@ jobs:
         
 
   
-  build:
+  test:
     needs: install
     runs-on: ubuntu-latest
     
@@ -63,7 +63,7 @@ jobs:
         docker run -v ${{ github.workspace }}:/app -w /app node:20 npm run test
 
   
-  build:
+  lint:
     needs: install
     runs-on: ubuntu-latest
     
