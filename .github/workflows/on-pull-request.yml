@@ -10,7 +10,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js
@@ -25,12 +24,9 @@ jobs:
       run: |
         docker run -v ${{ github.workspace }}:/app -w /app node:20 npm run build
         
-
-  
   test:
-    needs: install
+    needs: build
     runs-on: ubuntu-latest
-    
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js
@@ -47,9 +43,8 @@ jobs:
 
   
   lint:
-    needs: install
+    needs: test
     runs-on: ubuntu-latest
-    
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js
