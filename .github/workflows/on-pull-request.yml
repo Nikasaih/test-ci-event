@@ -5,7 +5,7 @@ on:
   push:
 
 env:
-  node-version: ${{ env.node-version }}
+  node-version: 16
   
 jobs:
 
