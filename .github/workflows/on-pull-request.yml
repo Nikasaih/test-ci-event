@@ -9,19 +9,19 @@ env:
   
 jobs:
 
-  install:
-    runs-on: ubuntu-latest
+  # install:
+  #   runs-on: ubuntu-latest
     
-    steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ env.node-version }}
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Use Node.js
+  #     uses: actions/setup-node@v3
+  #     with:
+  #       node-version: ${{ env.node-version }}
         
-    - name: Install dependencies
-      run: |
-        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm install
+  #   - name: Install dependencies
+  #     run: |
+  #       docker run -v ${{ github.workspace }}:/app -w /app node:20 npm install
 
 
   build:
@@ -37,7 +37,10 @@ jobs:
         
     - name: Install dependencies
       run: |
-        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm install && npm run build
+        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm install
+    - name: build app
+      run: |
+        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm run build
         
   # build:
   #   needs: install
