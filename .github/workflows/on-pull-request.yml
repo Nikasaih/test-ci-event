@@ -22,12 +22,13 @@ jobs:
     - name: Install dependencies
       run: |
         docker run -v ${{ github.workspace }}:/app -w /app node:16 npm install
-        
+    - name: zip up dependencies
+      run:  zip -r dependency.zip /node_modules
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: node-modules
-        path: ${{ github.workspace }}/node_modules
+        path: ${{ github.workspace }}/dependency.zip
         
   build:
     needs: install
@@ -44,10 +45,11 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: node-modules
-        path: ${{ github.workspace }}/node_modules
+        path: ${{ github.workspace }}/dependency.zip
         
     - name: Build
       run: |
+        unzip -o ${{ github.workspace }}/dependency.zip -d ${{ github.workspace }}
         docker run -v ${{ github.workspace }}:/app -w /app node:16 npm run build
         
     - name: Upload artifact
@@ -71,15 +73,16 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: node-modules
-        path: ${{ github.workspace }}/node_modules
+        path: ${{ github.workspace }}/dependency.zip
         
     - name: Test
       run: |
+        unzip -o ${{ github.workspace }}/dependency.zip -d ${{ github.workspace }}
         docker run -v ${{ github.workspace }}:/app -w /app node:16 npm test
 
 
   eslint:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     
     steps:
@@ -93,10 +96,11 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: node-modules
-        path: ${{ github.workspace }}/node_modules
+        path: ${{ github.workspace }}/dependency.zip
         
     - name: eslint
       run: |
+        unzip -o ${{ github.workspace }}/dependency.zip -d ${{ github.workspace }}
         docker run -v ${{ github.workspace }}:/app -w /app node:16 npm lint
 
 
