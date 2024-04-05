@@ -52,7 +52,7 @@ jobs:
         ls -la
         chmod 777 ${{ github.workspace }}/*.zip
         ls -la
-        unzip ${{ github.workspace }}/*.zip
+        unzip ${{ github.workspace }}/dependency.zip -d ${{ github.workspace }}/node_modules
         ls -a
         docker run -v ${{ github.workspace }}:/app -w /app node:16 npm run build
         
