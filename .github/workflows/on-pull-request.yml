@@ -49,9 +49,11 @@ jobs:
         
     - name: Build
       run: |
-        ls
+        ls -la
+        chmod 777 *.zip
+        ls -la
         unzip *.zip
-        ls
+        ls -a
         docker run -v ${{ github.workspace }}:/app -w /app node:16 npm run build
         
     - name: Upload artifact
