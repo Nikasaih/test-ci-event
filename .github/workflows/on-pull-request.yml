@@ -42,40 +42,10 @@ jobs:
       run: |
         docker run -v ${{ github.workspace }}:/app -w /app node:20 npm run build
         
-  # build:
-  #   needs: install
-  #   runs-on: ubuntu-latest
-    
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - name: Use Node.js
-  #     uses: actions/setup-node@v3
-  #     with:
-  #       node-version: ${{ env.node-version }}
-        
-  #   - name: Download artifact
-  #     uses: actions/download-artifact@v3
-  #     with:
-  #       name: node-modules
-  #       path: ${{ github.workspace }}/dependency.zip
-        
-  #   - name: Build
-  #     run: |
-  #       ls -la
-  #       chmod 777 ${{ github.workspace }}/*.zip
-  #       ls -la
-  #       unzip ${{ github.workspace }}/dependency.zip -d ${{ github.workspace }}/node_modules
-  #       ls -a
-  #       docker run -v ${{ github.workspace }}:/app -w /app node:20 npm run build
-        
-  #   - name: Upload artifact
-  #     uses: actions/upload-artifact@v3
-  #     with:
-  #       name: dist
-  #       path: ${{ github.workspace }}/dist
-        
-  test:
-    needs: build
+
+  
+  build:
+    needs: install
     runs-on: ubuntu-latest
     
     steps:
@@ -85,20 +55,16 @@ jobs:
       with:
         node-version: ${{ env.node-version }}
         
-    - name: Download artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: node-modules
-        path: ${{ github.workspace }}/dependency.zip
-        
-    - name: Test
+    - name: Install dependencies
       run: |
-        unzip -o ${{ github.workspace }}/dependency.zip -d ${{ github.workspace }}
-        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm test
+        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm install
+    - name: build app
+      run: |
+        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm run test
 
-
-  eslint:
-    needs: test
+  
+  build:
+    needs: install
     runs-on: ubuntu-latest
     
     steps:
@@ -108,16 +74,13 @@ jobs:
       with:
         node-version: ${{ env.node-version }}
         
-    - name: Download artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: node-modules
-        path: ${{ github.workspace }}/dependency.zip
-        
-    - name: eslint
+    - name: Install dependencies
       run: |
-        unzip -o ${{ github.workspace }}/dependency.zip -d ${{ github.workspace }}
-        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm lint
+        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm install
+    - name: build app
+      run: |
+        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm run lint
+
 
 
 
