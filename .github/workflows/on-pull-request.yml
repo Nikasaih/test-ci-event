@@ -5,7 +5,7 @@ on:
   push:
 
 env:
-  node-version: 16
+  node-version: 20
   
 jobs:
 
@@ -21,7 +21,7 @@ jobs:
         
     - name: Install dependencies
       run: |
-        docker run -v ${{ github.workspace }}:/app -w /app node:16 npm install
+        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm install
     - name: zip up dependencies
       run:  zip -r dependency.zip ${{ github.workspace }}/node_modules
     - name: Upload artifact
@@ -54,7 +54,7 @@ jobs:
         ls -la
         unzip ${{ github.workspace }}/dependency.zip -d ${{ github.workspace }}/node_modules
         ls -a
-        docker run -v ${{ github.workspace }}:/app -w /app node:16 npm run build
+        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm run build
         
     - name: Upload artifact
       uses: actions/upload-artifact@v3
@@ -82,7 +82,7 @@ jobs:
     - name: Test
       run: |
         unzip -o ${{ github.workspace }}/dependency.zip -d ${{ github.workspace }}
-        docker run -v ${{ github.workspace }}:/app -w /app node:16 npm test
+        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm test
 
 
   eslint:
@@ -105,7 +105,7 @@ jobs:
     - name: eslint
       run: |
         unzip -o ${{ github.workspace }}/dependency.zip -d ${{ github.workspace }}
-        docker run -v ${{ github.workspace }}:/app -w /app node:16 npm lint
+        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm lint
 
 
 
