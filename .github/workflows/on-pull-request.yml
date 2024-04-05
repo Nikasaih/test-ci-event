@@ -1,0 +1,103 @@
+name: on pull request
+
+on:
+#todo replace by on pull request fire event
+  push:
+
+env:
+  node-version: ${{ env.node-version }}
+  
+jobs:
+
+  install:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.node-version }}
+        
+    - name: Install dependencies
+      run: |
+        docker run -v ${{ github.workspace }}:/app -w /app node:16 npm install
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: node-modules
+        path: ${{ github.workspace }}/node_modules
+        
+  build:
+    needs: install
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.node-version }}
+        
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: node-modules
+        path: ${{ github.workspace }}/node_modules
+        
+    - name: Build
+      run: |
+        docker run -v ${{ github.workspace }}:/app -w /app node:16 npm run build
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist
+        path: ${{ github.workspace }}/dist
+        
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.node-version }}
+        
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: node-modules
+        path: ${{ github.workspace }}/node_modules
+        
+    - name: Test
+      run: |
+        docker run -v ${{ github.workspace }}:/app -w /app node:16 npm test
+
+
+  eslint:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.node-version }}
+        
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: node-modules
+        path: ${{ github.workspace }}/node_modules
+        
+    - name: eslint
+      run: |
+        docker run -v ${{ github.workspace }}:/app -w /app node:16 npm lint
+
+
+
