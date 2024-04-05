@@ -37,7 +37,7 @@ jobs:
         
     - name: Install dependencies
       run: |
-        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm install && npm build
+        docker run -v ${{ github.workspace }}:/app -w /app node:20 npm install && npm run build
         
   # build:
   #   needs: install
