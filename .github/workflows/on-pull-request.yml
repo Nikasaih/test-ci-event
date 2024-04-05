@@ -23,7 +23,7 @@ jobs:
       run: |
         docker run -v ${{ github.workspace }}:/app -w /app node:16 npm install
     - name: zip up dependencies
-      run:  zip -r dependency.zip /node_modules
+      run:  zip -r dependency.zip ${{ github.workspace }}/node_modules
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
