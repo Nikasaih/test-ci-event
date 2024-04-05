@@ -50,9 +50,9 @@ jobs:
     - name: Build
       run: |
         ls -la
-        chmod 777 *.zip
+        chmod 777 ${{ github.workspace }}/*.zip
         ls -la
-        unzip *.zip
+        unzip ${{ github.workspace }}/*.zip
         ls -a
         docker run -v ${{ github.workspace }}:/app -w /app node:16 npm run build
         
